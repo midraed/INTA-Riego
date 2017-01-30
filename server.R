@@ -183,7 +183,21 @@ shinyServer(function(input, output, session) {
   
   output$ETc_acum <- renderText({
     if(input$Parcela1 != ""){
-      ETc <- ETo_values()$ETo * Kc_values()$Kc
+      Kc_slider <- as.numeric(as.factor(Kc_values()$meses))
+      Kc_value <- as.numeric(as.factor(Kc_values()$meses))
+      Kc_value[Kc_slider==1] <- input$Kc_mes1
+      Kc_value[Kc_slider==2] <- input$Kc_mes2
+      Kc_value[Kc_slider==3] <- input$Kc_mes3
+      Kc_value[Kc_slider==4] <- input$Kc_mes4
+      Kc_value[Kc_slider==5] <- input$Kc_mes5
+      Kc_value[Kc_slider==6] <- input$Kc_mes6
+      Kc_value[Kc_slider==7] <- input$Kc_mes7
+      Kc_value[Kc_slider==8] <- input$Kc_mes8
+      Kc_value[Kc_slider==9] <- input$Kc_mes9
+      Kc_value[Kc_slider==10] <- input$Kc_mes10
+      Kc_value[Kc_slider==11] <- input$Kc_mes11
+      Kc_value[Kc_slider==12] <- input$Kc_mes12
+      ETc <- ETo_values()$ETo * Kc_value
       paste("ETc acumulada", round(sum(ETc),2), "mm.")
     }
     })
