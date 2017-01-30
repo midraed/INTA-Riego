@@ -48,7 +48,7 @@ navbarPage("Riego EEA Mendoza!",
                                     selectize = TRUE, width = NULL, size = NULL),
                         selectInput("Kc", "Kc:", listaKc, selected = NULL, multiple = FALSE,
                                     selectize = TRUE, width = NULL, size = NULL),
-                        numericInput("Kc_medio", "Kc medio:", value = 0,  min = 0, max = 2)
+                        sliderInput("Kc_medio", "Kc medio:", value = 0,  min = 0, max = 1.3, step = 0.01)
                       ),
                       
                       # Show a plot of the generated distribution
@@ -68,7 +68,7 @@ navbarPage("Riego EEA Mendoza!",
                         dateInput("stop3", "Hasta:", value = NULL, min = NULL, max = NULL,
                                   format = "yyyy-mm-dd", startview = "month", weekstart = 0,
                                   language = "es", width = NULL),
-                        selectInput("Parcela2", "Parcela:", listaParcelas, selected = NULL, multiple = FALSE,
+                        selectInput("Parcela2", "Parcela:", c("", listaParcelas), selected = NULL, multiple = FALSE,
                                     selectize = TRUE, width = NULL, size = NULL)
                       ),
                       
