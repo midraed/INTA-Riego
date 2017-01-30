@@ -99,6 +99,15 @@ shinyServer(function(input, output, session) {
                     value = stop)
   })
   
+  observe({
+    Parcela <- input$Parcela1
+    updateSelectInput(session, "Parcela2", selected = Parcela)
+  })
+  
+  observe({
+    Parcela <- input$Parcela2
+    updateSelectInput(session, "Parcela1", selected = Parcela)
+  })
 
   
   
@@ -167,14 +176,15 @@ shinyServer(function(input, output, session) {
     connRiego = dbConnect(MySQL(), user='shiny', password='561234', dbname='RIEGO',
                           host='172.21.116.72')
     on.exit(dbDisconnect(connRiego), add = TRUE)
+    parcelaSelected <- strsplit(input$Parcela2, split=" ")[[1]][1]  #Extraigo el N_PARCELA
+    
+    datos.goteo <- datos.goteo()[datos.goteo()$N_PARCELA == parcelaSelected,]  # Hago una tabla con la fila que me interesa
     datos <- dbGetQuery(connRiego, paste0("SELECT * FROM RIEGOS WHERE Fecha BETWEEN '", input$start3, "' AND '", input$stop3, 
-                                          "' AND N_PARCELA = 14"))
-    # Lámina aplicada=CAUDAL_GOT*Horas de Riego*((100/DIST_HIL)*(100/DIST_GOT))/1000/10
-    inParcela <- paste(datos.goteo()$N_PARCELA, datos.goteo()$PARCELA)
-    datos.goteo <- datos.goteo()[inParcela == input$Parcela2,]
+                                          "' AND N_PARCELA = ", datos.goteo$N_PARCELA)) ## Traigo los riegos
+    # Lámina aplicada=CAUDAL_GOT*Horas de Riego*((100/DIST_HIL)*(100/DIST_GOT))/1000/10 Formula para goteo
     lamina_aplicada <- list()
-    lamina_aplicada$riegos <- datos.goteo$CAUDAL_GOT*datos$`Horas de Riego`*((100/datos.goteo$DIST_HILERAS)*(100/datos.goteo$DIST_GOT))/1000/10
-    lamina_aplicada$fechas <- datos$Fecha
+    lamina_aplicada$riegos <- datos.goteo$CAUDAL_GOT*datos$`Horas de Riego`*((100/datos.goteo$DIST_HILERAS)*(100/datos.goteo$DIST_GOT))/1000/10 #Calculo las laminas
+    lamina_aplicada$fechas <- datos$Fecha #Guardo las fechas
     return(lamina_aplicada)
   })
   
