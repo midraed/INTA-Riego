@@ -149,14 +149,23 @@ shinyServer(function(input, output, session) {
     return(ETo_values)
   })
   
-  output$ETo_acum <- renderText({paste("ETo acumulada", sum(ETo_values()$ETo), "mm.")})
-  output$ETc_acum <- renderText({
+  Kc_values <- reactive({
     if(input$Parcela1 != ""){
+      Kc_values <- list()
       parcelas <- datos.goteo()
       IDKc <- datos.Kc()$ID[datos.Kc()$Nombre==input$Kc]
       meses <- as.POSIXlt(ETo_values()$dias)$mon + 3
-      Kc <- as.numeric(datos.Kc()[IDKc,meses])
-      ETc <- ETo_values()$ETo * Kc
+      Kc_values$Kc <- as.numeric(datos.Kc()[IDKc,meses])
+      Kc_values$meses <- meses
+      return(Kc_values)
+    }
+  })
+  
+  
+  output$ETo_acum <- renderText({paste("ETo acumulada", sum(ETo_values()$ETo), "mm.")})
+  output$ETc_acum <- renderText({
+    if(input$Parcela1 != ""){
+      ETc <- ETo_values()$ETo * Kc_values()$Kc
       paste("ETc acumulada", round(sum(ETc),2), "mm.")
     }
     })
@@ -168,13 +177,9 @@ shinyServer(function(input, output, session) {
   
   output$ETcplot <- renderPlot({
     if(input$Parcela1 != ""){
-      parcelas <- datos.goteo()
-      IDKc <- datos.Kc()$ID[datos.Kc()$Nombre==input$Kc]
-      meses <- as.POSIXlt(ETo_values()$dias)$mon + 3
-      Kc <- as.numeric(datos.Kc()[IDKc,meses])
-      bp <- barplot(ETo_values()$ETo * Kc, names.arg=ETo_values()$dias, ylab="ETc (mm)", col="dark green")
-      lines(bp[,1], Kc, type = "o", ylim=c(0,1.2))
-      text(bp, ETo_values()$ETo * Kc -0.3, labels=as.character(round(ETo_values()$ETo  * Kc,2)), xpd=TRUE)
+      bp <- barplot(ETo_values()$ETo * Kc_values()$Kc, names.arg=ETo_values()$dias, ylab="ETc (mm)", col="dark green")
+      lines(bp[,1], Kc_values()$Kc, type = "o", ylim=c(0,1.2))
+      text(bp, ETo_values()$ETo * Kc_values()$Kc -0.3, labels=as.character(round(ETo_values()$ETo  * Kc_values()$Kc,2)), xpd=TRUE)
     }
   })
   
