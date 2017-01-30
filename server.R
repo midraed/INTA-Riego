@@ -153,9 +153,26 @@ shinyServer(function(input, output, session) {
     if(input$Parcela1 != ""){
       Kc_values <- list()
       IDKc <- datos.Kc()$ID[datos.Kc()$Nombre==input$Kc]
-      meses <- as.POSIXlt(ETo_values()$dias)$mon + 3
-      Kc_values$Kc <- as.numeric(datos.Kc()[IDKc,meses])
+      meses <- as.POSIXlt(ETo_values()$dias)$mon
+      Kc_values$Kc <- as.numeric(datos.Kc()[IDKc,meses+3])
       Kc_values$meses <- meses
+      ### Update sliders
+      meses_names <- c("enero", "febrero", "marzo", "abril", "mayo", "junio", 
+                       "julio", "agosto", "setiembre", "noviembre", "diciembre") #Seguro que esta en Constants
+      ### TODO: Hace un bucle nabo
+      updateSliderInput(session, "Kc_mes1", label = paste("Kc" , meses_names[unique(meses)[1]+1]), value = unique(Kc_values$Kc)[1])
+      updateSliderInput(session, "Kc_mes2", label = paste("Kc" , meses_names[unique(meses)[2]+1]), value = unique(Kc_values$Kc)[2])
+      updateSliderInput(session, "Kc_mes3", label = paste("Kc" , meses_names[unique(meses)[3]+1]), value = unique(Kc_values$Kc)[3])
+      updateSliderInput(session, "Kc_mes4", label = paste("Kc" , meses_names[unique(meses)[4]+1]), value = unique(Kc_values$Kc)[4])
+      updateSliderInput(session, "Kc_mes5", label = paste("Kc" , meses_names[unique(meses)[5]+1]), value = unique(Kc_values$Kc)[5])
+      updateSliderInput(session, "Kc_mes6", label = paste("Kc" , meses_names[unique(meses)[6]+1]), value = unique(Kc_values$Kc)[6])
+      updateSliderInput(session, "Kc_mes7", label = paste("Kc" , meses_names[unique(meses)[7]+1]), value = unique(Kc_values$Kc)[7])
+      updateSliderInput(session, "Kc_mes8", label = paste("Kc" , meses_names[unique(meses)[8]+1]), value = unique(Kc_values$Kc)[8])
+      updateSliderInput(session, "Kc_mes9", label = paste("Kc" , meses_names[unique(meses)[9]+1]), value = unique(Kc_values$Kc)[9])
+      updateSliderInput(session, "Kc_mes10", label = paste("Kc" , meses_names[unique(meses)[10]+1]), value = unique(Kc_values$Kc)[10])
+      updateSliderInput(session, "Kc_mes11", label = paste("Kc" , meses_names[unique(meses)[11]+1]), value = unique(Kc_values$Kc)[11])
+      updateSliderInput(session, "Kc_mes12", label = paste("Kc" , meses_names[unique(meses)[12]+1]), value = unique(Kc_values$Kc)[12])
+      ### End update sliders
       return(Kc_values)
     }
   })
@@ -163,6 +180,7 @@ shinyServer(function(input, output, session) {
   output$n_meses <- renderText({length(unique(Kc_values()$meses))})
   
   output$ETo_acum <- renderText({paste("ETo acumulada", sum(ETo_values()$ETo), "mm.")})
+  
   output$ETc_acum <- renderText({
     if(input$Parcela1 != ""){
       ETc <- ETo_values()$ETo * Kc_values()$Kc
@@ -177,9 +195,23 @@ shinyServer(function(input, output, session) {
   
   output$ETcplot <- renderPlot({
     if(input$Parcela1 != ""){
-      bp <- barplot(ETo_values()$ETo * Kc_values()$Kc, names.arg=ETo_values()$dias, ylab="ETc (mm)", col="dark green")
-      lines(bp[,1], Kc_values()$Kc, type = "o", ylim=c(0,1.2))
-      text(bp, ETo_values()$ETo * Kc_values()$Kc -0.3, labels=as.character(round(ETo_values()$ETo  * Kc_values()$Kc,2)), xpd=TRUE)
+      Kc_slider <- as.numeric(as.factor(Kc_values()$meses))
+      Kc_value <- as.numeric(as.factor(Kc_values()$meses))
+      Kc_value[Kc_slider==1] <- input$Kc_mes1
+      Kc_value[Kc_slider==2] <- input$Kc_mes2
+      Kc_value[Kc_slider==3] <- input$Kc_mes3
+      Kc_value[Kc_slider==4] <- input$Kc_mes4
+      Kc_value[Kc_slider==5] <- input$Kc_mes5
+      Kc_value[Kc_slider==6] <- input$Kc_mes6
+      Kc_value[Kc_slider==7] <- input$Kc_mes7
+      Kc_value[Kc_slider==8] <- input$Kc_mes8
+      Kc_value[Kc_slider==9] <- input$Kc_mes9
+      Kc_value[Kc_slider==10] <- input$Kc_mes10
+      Kc_value[Kc_slider==11] <- input$Kc_mes11
+      Kc_value[Kc_slider==12] <- input$Kc_mes12
+      bp <- barplot(ETo_values()$ETo * Kc_value, names.arg=ETo_values()$dias, ylab="ETc (mm)", col="dark green")
+      lines(bp[,1], Kc_value, type = "o", ylim=c(0,1.2))
+      text(bp, ETo_values()$ETo * Kc_value -0.3, labels=as.character(round(ETo_values()$ETo  * Kc_value,2)), xpd=TRUE)
     }
   })
   

@@ -89,6 +89,7 @@ navbarPage("Riego EEA Mendoza!",
                       
                       # Show a plot of the generated distribution
                       mainPanel(
+                       textOutput("n_meses"),
                        textOutput("ETo_acum"),
                        textOutput("ETc_acum"),
                        plotOutput("EToplot"),
