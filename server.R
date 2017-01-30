@@ -152,7 +152,6 @@ shinyServer(function(input, output, session) {
   Kc_values <- reactive({
     if(input$Parcela1 != ""){
       Kc_values <- list()
-      parcelas <- datos.goteo()
       IDKc <- datos.Kc()$ID[datos.Kc()$Nombre==input$Kc]
       meses <- as.POSIXlt(ETo_values()$dias)$mon + 3
       Kc_values$Kc <- as.numeric(datos.Kc()[IDKc,meses])
@@ -161,6 +160,7 @@ shinyServer(function(input, output, session) {
     }
   })
   
+  output$n_meses <- renderText({length(unique(Kc_values()$meses))})
   
   output$ETo_acum <- renderText({paste("ETo acumulada", sum(ETo_values()$ETo), "mm.")})
   output$ETc_acum <- renderText({

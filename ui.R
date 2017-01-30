@@ -48,7 +48,43 @@ navbarPage("Riego EEA Mendoza!",
                                     selectize = TRUE, width = NULL, size = NULL),
                         selectInput("Kc", "Kc:", listaKc, selected = NULL, multiple = FALSE,
                                     selectize = TRUE, width = NULL, size = NULL),
-                        sliderInput("Kc_medio", "Kc medio:", value = 0,  min = 0, max = 1.3, step = 0.01)
+                        conditionalPanel(condition= "output.n_meses > 0",
+                                         sliderInput("Kc_mes1", "Kc medio:", value = 0,  min = 0, max = 1.3, step = 0.01)
+                        ),
+                        conditionalPanel(condition= "output.n_meses > 1",
+                                         sliderInput("Kc_mes2", "Kc medio:", value = 0,  min = 0, max = 1.3, step = 0.01)
+                        ),
+                        conditionalPanel(condition= "output.n_meses > 2",
+                                         sliderInput("Kc_mes3", "Kc medio:", value = 0,  min = 0, max = 1.3, step = 0.01)
+                        ),
+                        conditionalPanel(condition= "output.n_meses > 3",
+                                         sliderInput("Kc_mes4", "Kc medio:", value = 0,  min = 0, max = 1.3, step = 0.01)
+                        ),
+                        conditionalPanel(condition= "output.n_meses > 4",
+                                         sliderInput("Kc_mes5", "Kc medio:", value = 0,  min = 0, max = 1.3, step = 0.01)
+                        ),
+                        conditionalPanel(condition= "output.n_meses > 5",
+                                         sliderInput("Kc_mes6", "Kc medio:", value = 0,  min = 0, max = 1.3, step = 0.01)
+                        ),
+                        conditionalPanel(condition= "output.n_meses > 6",
+                                         sliderInput("Kc_mes7", "Kc medio:", value = 0,  min = 0, max = 1.3, step = 0.01)
+                        ),
+                        conditionalPanel(condition= "output.n_meses > 7",
+                                         sliderInput("Kc_mes8", "Kc medio:", value = 0,  min = 0, max = 1.3, step = 0.01)
+                        ),
+                        conditionalPanel(condition= "output.n_meses > 8",
+                                         sliderInput("Kc_mes9", "Kc medio:", value = 0,  min = 0, max = 1.3, step = 0.01)
+                        ),
+                        conditionalPanel(condition= "output.n_meses > 9",
+                                         sliderInput("Kc_mes10", "Kc medio:", value = 0,  min = 0, max = 1.3, step = 0.01)
+                        ),
+                        conditionalPanel(condition= "output.n_meses > 10",
+                                         sliderInput("Kc_mes11", "Kc medio:", value = 0,  min = 0, max = 1.3, step = 0.01)
+                        ),
+                        conditionalPanel(condition= "output.n_meses > 11",
+                                         sliderInput("Kc_mes12", "Kc medio:", value = 0,  min = 0, max = 1.3, step = 0.01)
+                        )
+                        
                       ),
                       
                       # Show a plot of the generated distribution
