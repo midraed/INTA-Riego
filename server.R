@@ -12,7 +12,7 @@ shinyServer(function(input, output, session) {
   
   datos.WS <- reactive({
     connWS = dbConnect(MySQL(), user='shiny', password='561234', dbname='METEO1',
-                        host='172.21.116.72')
+                       host='172.21.116.72')
     on.exit(dbDisconnect(connWS), add = TRUE)
     datos <- dbGetQuery(connWS, paste0("SELECT * FROM Current WHERE FechaHora BETWEEN '", input$start1, "' AND '", paste(input$stop1, "23:59:59"), "'" ))
     # datos$FechaHora <- as.POSIXct(strptime(datos$FechaHora, format= "%Y-%m-%d %H:%M:%S", tz="ART"))
@@ -33,7 +33,7 @@ shinyServer(function(input, output, session) {
                           host='172.21.116.72')
     on.exit(dbDisconnect(connRiego), add = TRUE)
     datos <- dbGetQuery(connRiego, "SELECT * FROM GOTEO")
-    })
+  })
   
   datos.superf <- reactive({
     connRiego = dbConnect(MySQL(), user='shiny', password='561234', dbname='RIEGO',
@@ -108,7 +108,7 @@ shinyServer(function(input, output, session) {
     Parcela <- input$Parcela2
     updateSelectInput(session, "Parcela1", selected = Parcela)
   })
-
+  
   
   
   ######### Agromet
@@ -127,17 +127,17 @@ shinyServer(function(input, output, session) {
   )
   
   
- ########## ET
+  ########## ET
   ETo_values <- reactive({
     datos <- datos.WS()
     dias <- unique(datos$hourly$date)
     ETo_values <- vector()
     for(i in 1:nrow(datos$hourly)){
-        date <- as.POSIXlt(datos$hourly[i,1], format="%Y-%m-%d %H:%M:%S")
-        ETo_values <- c(ETo_values, hourlyET(datos$hourly[i,], lat=-33.00513, 
-                                         long = -68.86469, elev=927, ET="ETr", 
-                                         height = 2))
-      }
+      date <- as.POSIXlt(datos$hourly[i,1], format="%Y-%m-%d %H:%M:%S")
+      ETo_values <- c(ETo_values, hourlyET(datos$hourly[i,], lat=-33.00513, 
+                                           long = -68.86469, elev=927, ET="ETr", 
+                                           height = 2))
+    }
     ETo_dailys <- vector()
     for(j in 1:length(dias)){
       ETo_dailys <- c(ETo_dailys, sum(ETo_values[datos$hourly$date==dias[j]]))
@@ -147,10 +147,19 @@ shinyServer(function(input, output, session) {
     ETo_values$dias <- dias
     ETo_values$ETo <- ETo_dailys
     return(ETo_values)
-    })
+  })
   
   output$ETo_acum <- renderText({paste("ETo acumulada", sum(ETo_values()$ETo), "mm.")})
-  
+  output$ETc_acum <- renderText({
+    if(input$Parcela1 != ""){
+      parcelas <- datos.goteo()
+      IDKc <- datos.Kc()$ID[datos.Kc()$Nombre==input$Kc]
+      meses <- as.POSIXlt(ETo_values()$dias)$mon + 3
+      Kc <- as.numeric(datos.Kc()[IDKc,meses])
+      ETc <- ETo_values()$ETo * Kc
+      paste("ETc acumulada", round(sum(ETc),2), "mm.")
+    }
+    })
   
   output$EToplot <- renderPlot({
     bp <- barplot(ETo_values()$ETo, names.arg=ETo_values()$dias, ylab="ETo (mm)", col="blue")
@@ -169,10 +178,7 @@ shinyServer(function(input, output, session) {
     }
   })
   
- ######### Riego
-  Lam <- 238
-  ppT <- 54
-  ppE <- 46
+  ######### Riego
   
   lamina_aplicada <- reactive({
     connRiego = dbConnect(MySQL(), user='shiny', password='561234', dbname='RIEGO',
@@ -192,7 +198,7 @@ shinyServer(function(input, output, session) {
   
   
   output$Lam_acum <- renderText({paste("Lámina de riego acumulada", round(sum(lamina_aplicada()$riegos),0), "mm.")})
-  output$ppT_acum <- renderText({paste("Precipitación total acumulada", sum(datos.WS()$hourly$rain), "mm.")})
+  output$ppT_acum <- renderText({paste("Precipitación acumulada", sum(datos.WS()$hourly$rain), "mm.")})
   output$ppE_acum <- renderText({paste("Precipitación efectiva acumulada", round(sum(datos.WS()$hourly$rain)*0.6,0), "mm.")})
   
   output$riegoPlot <- renderPlot({
@@ -201,7 +207,7 @@ shinyServer(function(input, output, session) {
       df2 <- data.frame(fechas=lamina_aplicada()$fechas, riegos=lamina_aplicada()$riegos)
       result <- base::merge(df1,df2, all.x=T)
       bp <- barplot(result$riegos, names.arg=result$fechas, col="light blue")
-      text(bp, result$riegos-1, labels=as.character( round(result$riegos, 2)), xpd=TRUE)
+      text(bp, result$riegos-0.5, labels=as.character( round(result$riegos, 2)), xpd=TRUE)
     }
   })
   
