@@ -83,7 +83,8 @@ navbarPage("Riego EEA Mendoza!",
                         ),
                         conditionalPanel(condition= "output.n_meses > 11",
                                          sliderInput("Kc_mes12", "Kc medio:", value = 0,  min = 0, max = 1.3, step = 0.01)
-                        )
+                        ),
+                        downloadButton("downloadET", "Descargar")
                         
                       ),
                       
@@ -107,7 +108,8 @@ navbarPage("Riego EEA Mendoza!",
                                   format = "yyyy-mm-dd", startview = "month", weekstart = 0,
                                   language = "es", width = NULL),
                         selectInput("Parcela2", "Parcela:", c("", listaParcelas), selected = NULL, multiple = FALSE,
-                                    selectize = TRUE, width = NULL, size = NULL)
+                                    selectize = TRUE, width = NULL, size = NULL),
+                        downloadButton("downloadRiego", "Descargar")
                       ),
                       
                       # Show a plot of the generated distribution

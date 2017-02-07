@@ -110,7 +110,7 @@ shinyServer(function(input, output, session) {
   
   
   
-  ######### Agromet
+  ######### Agromet ####
   
   output$WSplot <- renderPlot({
     plot(datos.WS(), hourly=!input$todos.los.datos)
@@ -126,7 +126,7 @@ shinyServer(function(input, output, session) {
   )
   
   
-  ########## ET
+  ########## ET ####
   ETo_values <- reactive({
     datos <- datos.WS()
     dias <- unique(datos$hourly$date)
@@ -227,7 +227,16 @@ shinyServer(function(input, output, session) {
     }
   })
   
-  ######### Riego
+  output$downloadET <- downloadHandler(
+    filename = function() {
+      paste("INTA-Meteo-", input$start1, "-", input$stop1, ".csv", sep="")
+    },
+    content = function(file) {
+      write.csv(datos.WS()$hourly, file)
+    }
+  )
+  
+  ######### Riego ####
   
   lamina_aplicada <- reactive({
     connRiego = dbConnect(MySQL(), user='shiny', password='561234', dbname='RIEGO',
@@ -259,5 +268,15 @@ shinyServer(function(input, output, session) {
       text(bp, result$riegos-0.5, labels=as.character( round(result$riegos, 2)), xpd=TRUE)
     }
   })
+  
+  
+  output$downloadRiego <- downloadHandler(
+    filename = function() {
+      paste("INTA-Meteo-", input$start1, "-", input$stop1, ".csv", sep="")
+    },
+    content = function(file) {
+      write.csv(datos.WS()$hourly, file)
+    }
+  )
   
 })
