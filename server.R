@@ -108,6 +108,15 @@ shinyServer(function(input, output, session) {
     updateSelectInput(session, "Parcela1", selected = Parcela)
   })
   
+  observe({
+    Parcela <- input$Parcela1
+    if(input$Parcela1 != ""){
+      ## TODO: Esto ando solo para goteos..!
+      parcelaSelected <- strsplit(input$Parcela1, split=" ")[[1]][1]  #Extraigo el N_PARCELA
+      datos.goteo <- datos.goteo()[datos.goteo()$N_PARCELA == parcelaSelected,]
+      updateSelectInput(session, "Kc", selected = datos.Kc()$Nombre[datos.Kc()$ID==datos.goteo$KC_default])
+    }
+  })
   
   
   ######### Agromet ####
@@ -242,6 +251,7 @@ shinyServer(function(input, output, session) {
     connRiego = dbConnect(MySQL(), user='shiny', password='561234', dbname='RIEGO',
                           host='172.21.116.72')
     on.exit(dbDisconnect(connRiego), add = TRUE)
+    ## TODO: Esto ando solo para goteos..!
     parcelaSelected <- strsplit(input$Parcela2, split=" ")[[1]][1]  #Extraigo el N_PARCELA
     
     datos.goteo <- datos.goteo()[datos.goteo()$N_PARCELA == parcelaSelected,]  # Hago una tabla con la fila que me interesa

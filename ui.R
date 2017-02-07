@@ -46,7 +46,7 @@ navbarPage("Riego EEA Mendoza!",
                                   language = "es", width = NULL),
                         selectInput("Parcela1", "Parcela:", c("", listaParcelas), selected = NULL, multiple = FALSE,
                                     selectize = TRUE, width = NULL, size = NULL),
-                        selectInput("Kc", "Kc:", listaKc, selected = NULL, multiple = FALSE,
+                        selectInput("Kc", "Kc:", c("", listaKc), selected = NULL, multiple = FALSE,
                                     selectize = TRUE, width = NULL, size = NULL),
                         conditionalPanel(condition= "output.n_meses > 0",
                                          sliderInput("Kc_mes1", "Kc medio:", value = 0,  min = 0, max = 1.3, step = 0.01)
