@@ -221,8 +221,8 @@ shinyServer(function(input, output, session) {
       Kc_value[Kc_slider==10] <- input$Kc_mes10
       Kc_value[Kc_slider==11] <- input$Kc_mes11
       Kc_value[Kc_slider==12] <- input$Kc_mes12
-      bp <- barplot(ETo_values()$ETo * Kc_value, names.arg=ETo_values()$dias, ylab="ETc (mm)", col="dark green")
-      lines(bp[,1], Kc_value, type = "o", ylim=c(0,1.2))
+      bp <- barplot(ETo_values()$ETo * Kc_value, names.arg=ETo_values()$dias, 
+                    ylab="ETc (mm)", col="dark green", ylim=c(0, max(ETo_values()$ETo)))
       text(bp, ETo_values()$ETo * Kc_value -0.3, labels=as.character(round(ETo_values()$ETo  * Kc_value,2)), xpd=TRUE)
     }
   })
