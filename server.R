@@ -143,7 +143,7 @@ shinyServer(function(input, output, session) {
     }
     ETo_dailys <- round(ETo_dailys,2)
     ETo_values <- list()
-    ETo_values$dias <- dias  ## <- Esta pasando horas y no dias!
+    ETo_values$dias <- dias  
     ETo_values$ETo <- ETo_dailys
     return(ETo_values)
   })
@@ -155,34 +155,34 @@ shinyServer(function(input, output, session) {
       meses <- as.POSIXlt(ETo_values()$dias)$mon
       meses_names <- c("enero", "febrero", "marzo", "abril", "mayo", "junio", 
                        "julio", "agosto", "setiembre", "octubre", "noviembre", "diciembre") #Seguro que esta en Constants
-      Kc_values <- unique(data.frame(mes=meses_names[meses+1], Kc=as.numeric(datos.Kc()[IDKc,meses+3])))
-      ### Update sliders
+      Kc_values <-data.frame(n_mes=meses, mes=meses_names[meses+1], Kc=as.numeric(datos.Kc()[IDKc,meses+3]))
       ### TODO: Hace un bucle nabo
-      updateSliderInput(session, "Kc_mes1", label = paste("Kc" , Kc_values$mes[1]), value = Kc_values$Kc[1])
-      updateSliderInput(session, "Kc_mes2", label = paste("Kc" , Kc_values$mes[2]), value = Kc_values$Kc[2])
-      updateSliderInput(session, "Kc_mes3", label = paste("Kc" , Kc_values$mes[3]), value = Kc_values$Kc[3])
-      updateSliderInput(session, "Kc_mes4", label = paste("Kc" , Kc_values$mes[4]), value = Kc_values$Kc[4])
-      updateSliderInput(session, "Kc_mes5", label = paste("Kc" , Kc_values$mes[5]), value = Kc_values$Kc[5])
-      updateSliderInput(session, "Kc_mes6", label = paste("Kc" , Kc_values$mes[6]), value = Kc_values$Kc[6])
-      updateSliderInput(session, "Kc_mes7", label = paste("Kc" , Kc_values$mes[7]), value = Kc_values$Kc[7])
-      updateSliderInput(session, "Kc_mes8", label = paste("Kc" , Kc_values$mes[8]), value = Kc_values$Kc[8])
-      updateSliderInput(session, "Kc_mes9", label = paste("Kc" , Kc_values$mes[9]), value = Kc_values$Kc[9])
-      updateSliderInput(session, "Kc_mes10", label = paste("Kc" , Kc_values$mes[10]), value = Kc_values$Kc[10])
-      updateSliderInput(session, "Kc_mes11", label = paste("Kc" , Kc_values$mes[11]), value = Kc_values$Kc[11])
-      updateSliderInput(session, "Kc_mes12", label = paste("Kc" , Kc_values$mes[12]), value = Kc_values$Kc[12])
+      u_Kc_values <- unique(Kc_values)
+      updateSliderInput(session, "Kc_mes1", label = paste("Kc" , u_Kc_values$mes[1]), value = u_Kc_values$Kc[1])
+      updateSliderInput(session, "Kc_mes2", label = paste("Kc" , u_Kc_values$mes[2]), value = u_Kc_values$Kc[2])
+      updateSliderInput(session, "Kc_mes3", label = paste("Kc" , u_Kc_values$mes[3]), value = u_Kc_values$Kc[3])
+      updateSliderInput(session, "Kc_mes4", label = paste("Kc" , u_Kc_values$mes[4]), value = u_Kc_values$Kc[4])
+      updateSliderInput(session, "Kc_mes5", label = paste("Kc" , u_Kc_values$mes[5]), value = u_Kc_values$Kc[5])
+      updateSliderInput(session, "Kc_mes6", label = paste("Kc" , u_Kc_values$mes[6]), value = u_Kc_values$Kc[6])
+      updateSliderInput(session, "Kc_mes7", label = paste("Kc" , u_Kc_values$mes[7]), value = u_Kc_values$Kc[7])
+      updateSliderInput(session, "Kc_mes8", label = paste("Kc" , u_Kc_values$mes[8]), value = u_Kc_values$Kc[8])
+      updateSliderInput(session, "Kc_mes9", label = paste("Kc" , u_Kc_values$mes[9]), value = u_Kc_values$Kc[9])
+      updateSliderInput(session, "Kc_mes10", label = paste("Kc" , u_Kc_values$mes[10]), value = u_Kc_values$Kc[10])
+      updateSliderInput(session, "Kc_mes11", label = paste("Kc" , u_Kc_values$mes[11]), value = u_Kc_values$Kc[11])
+      updateSliderInput(session, "Kc_mes12", label = paste("Kc" , u_Kc_values$mes[12]), value = u_Kc_values$Kc[12])
       ### End update sliders
       return(Kc_values)
     }
   })
   
-  output$n_meses <- renderText({length(unique(Kc_values()$meses))})
+  output$n_meses <- renderText({length(unique(Kc_values()$mes))})
   
   output$ETo_acum <- renderText({paste("ETo acumulada", sum(ETo_values()$ETo), "mm.")})
   
   output$ETc_acum <- renderText({
     if(input$Parcela1 != ""){
-      Kc_slider <- as.numeric(as.factor(Kc_values()$meses))  ## <- Aca esta cambiado KC_values y no funca
-      Kc_value <- as.numeric(as.factor(Kc_values()$meses))
+      Kc_slider <- as.numeric(as.factor(Kc_values()$mes))  
+      Kc_value <- as.numeric(as.factor(Kc_values()$mes))
       Kc_value[Kc_slider==1] <- input$Kc_mes1
       Kc_value[Kc_slider==2] <- input$Kc_mes2
       Kc_value[Kc_slider==3] <- input$Kc_mes3
@@ -207,8 +207,8 @@ shinyServer(function(input, output, session) {
   
   output$ETcplot <- renderPlot({
     if(input$Parcela1 != ""){
-      Kc_slider <- as.numeric(as.factor(Kc_values()$meses))
-      Kc_value <- as.numeric(as.factor(Kc_values()$meses))
+      Kc_slider <- as.numeric(as.factor(Kc_values()$mes))
+      Kc_value <- as.numeric(as.factor(Kc_values()$mes))
       Kc_value[Kc_slider==1] <- input$Kc_mes1
       Kc_value[Kc_slider==2] <- input$Kc_mes2
       Kc_value[Kc_slider==3] <- input$Kc_mes3
