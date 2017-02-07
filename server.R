@@ -20,10 +20,9 @@ shinyServer(function(input, output, session) {
     if(length(datos)>1){
       datos <- read.WSdata(WSdata = datos, 
                            datetime.format =  "%Y-%m-%d %H:%M:%S", columns = c("datetime", "temp", 
-                                                                               "RH", NA, "rain", "radiation", "wind"), lat=-33.00513, 
-                           long= -68.86469, elev=927, height= 2)}
-    else datos <-  NA
-    
+                           "RH", NA, "rain", "radiation", "wind"), lat=-33.00513, 
+                           long= -68.86469, elev=927, height= 2)
+      } else {datos <-  NA}
   })
   
   ### Parcelas y riego
