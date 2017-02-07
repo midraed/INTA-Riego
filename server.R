@@ -278,7 +278,7 @@ shinyServer(function(input, output, session) {
                                           "' AND N_PARCELA = ", datos.goteo$N_PARCELA)) ## Traigo los riegos
     # Lámina aplicada=CAUDAL_GOT*Horas de Riego*((100/DIST_HIL)*(100/DIST_GOT))/1000/10 Formula para goteo
     lamina_aplicada <- list()
-    lamina_aplicada$riegos <- datos.goteo$CAUDAL_GOT*datos$`Horas de Riego`*((100/datos.goteo$DIST_HILERAS)*(100/datos.goteo$DIST_GOT))/1000/10 #Calculo las laminas
+    lamina_aplicada$riegos <- round(datos.goteo$CAUDAL_GOT*datos$`Horas de Riego`*((100/datos.goteo$DIST_HILERAS)*(100/datos.goteo$DIST_GOT))/1000/10,2) #Calculo las laminas
     lamina_aplicada$fechas <- datos$Fecha #Guardo las fechas
     return(lamina_aplicada)
   })
@@ -301,10 +301,13 @@ shinyServer(function(input, output, session) {
   
   output$downloadRiego <- downloadHandler(
     filename = function() {
-      paste("INTA-Meteo-", input$start1, "-", input$stop1, ".csv", sep="")
+      paste("INTA-Riegos-", input$Parcela2, "-", input$start1, "-", input$stop1, ".csv", sep="")
     },
     content = function(file) {
-      write.csv(datos.WS()$hourly, file)
+      df1 <- data.frame(fechas=as.character(seq.Date(input$start3, input$stop3, by=1)))
+      df2 <- data.frame(fechas=lamina_aplicada()$fechas, Lamina_ap=lamina_aplicada()$riegos)
+      result <- base::merge(df1,df2, all.x=T)
+      write.csv(result, file)
     }
   )
   
