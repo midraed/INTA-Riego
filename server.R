@@ -238,10 +238,29 @@ shinyServer(function(input, output, session) {
   
   output$downloadET <- downloadHandler(
     filename = function() {
-      paste("INTA-Meteo-", input$start1, "-", input$stop1, ".csv", sep="")
+      paste("INTA-ET-", input$Parcela1, "-", input$start1, "-", input$stop1, ".csv", sep="")
     },
     content = function(file) {
-      write.csv(datos.WS()$hourly, file)
+      Kc_value <- 0
+      if(input$Parcela1 != ""){
+        Kc_slider <- as.numeric(as.factor(Kc_values()$mes))
+        Kc_value <- as.numeric(as.factor(Kc_values()$mes))
+        Kc_value[Kc_slider==1] <- input$Kc_mes1
+        Kc_value[Kc_slider==2] <- input$Kc_mes2
+        Kc_value[Kc_slider==3] <- input$Kc_mes3
+        Kc_value[Kc_slider==4] <- input$Kc_mes4
+        Kc_value[Kc_slider==5] <- input$Kc_mes5
+        Kc_value[Kc_slider==6] <- input$Kc_mes6
+        Kc_value[Kc_slider==7] <- input$Kc_mes7
+        Kc_value[Kc_slider==8] <- input$Kc_mes8
+        Kc_value[Kc_slider==9] <- input$Kc_mes9
+        Kc_value[Kc_slider==10] <- input$Kc_mes10
+        Kc_value[Kc_slider==11] <- input$Kc_mes11
+        Kc_value[Kc_slider==12] <- input$Kc_mes12
+        ETc <- ETo_values()$ETo * Kc_value}
+      data <- data.frame(Fecha=ETo_values()$dias, ETo=ETo_values()$ETo,
+                         Kc=Kc_value, ETc=ETc)
+      write.csv(data, file)
     }
   )
   
