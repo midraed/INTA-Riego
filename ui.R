@@ -122,6 +122,11 @@ navbarPage("Riego EEA Mendoza!",
                        
                       )
                     )  
+           ),
+           tabPanel("Acerca de",
+                    fluidPage(
+                      includeMarkdown("about.md")
+                    )  
            )
            
 ) #END
