@@ -297,7 +297,7 @@ shinyServer(function(input, output, session) {
   
   output$Lam_acum <- renderText({paste("Lámina de riego acumulada", round(sum(lamina_aplicada()$riegos),0), "mm.")})
   output$ppT_acum <- renderText({paste("Precipitación acumulada", sum(datos.WS()$daily$rain_sum), "mm.")})
-  output$ppE_acum <- renderText({paste("Precipitación efectiva acumulada", round(sum(datos.WS()$hourly$rain)*0.6,0), "mm.")})
+  output$ppE_acum <- renderText({paste("Precipitación efectiva acumulada", round(sum(datos.WS()$daily$rain_sum)*0.6,0), "mm.")})
   
   output$riegoPlot <- renderPlot({
     if(input$Parcela2 != ""){
