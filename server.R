@@ -138,6 +138,7 @@ shinyServer(function(input, output, session) {
   ########## ET ####
   ETo_values <- reactive({
     datos <- datos.WS()
+    datos$hourly$date <- as.Date(datos$hourly$datetime)
     dias <- unique(datos$hourly$date)
     ETo_values <- vector()
     for(i in 1:nrow(datos$hourly)){
