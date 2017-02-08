@@ -213,7 +213,7 @@ shinyServer(function(input, output, session) {
   output$EToplot <- renderPlot({
     bp <- barplot(ETo_values()$ETo, ylab="ETo (mm)", col="blue")
     text(bp, ETo_values()$ETo-0.3, labels=as.character(ETo_values()$ETo), xpd=TRUE)
-    text(cex=1, x=bp-.65, y=-1.5, ETo_values()$dias, xpd=TRUE, srt=45)
+    text(cex=0.7, x=bp, y=-1, ETo_values()$dias, xpd=TRUE, srt=270)
   })
   
   output$ETcplot <- renderPlot({
@@ -235,7 +235,7 @@ shinyServer(function(input, output, session) {
       bp <- barplot(ETo_values()$ETo * Kc_value, 
                     ylab="ETc (mm)", col="dark green", ylim=c(0, max(ETo_values()$ETo)))
       text(bp, ETo_values()$ETo * Kc_value -0.3, labels=as.character(round(ETo_values()$ETo  * Kc_value,2)), xpd=TRUE)
-      text(cex=1, x=bp-.65, y=-1.5, ETo_values()$dias, xpd=TRUE, srt=45)
+      text(cex=0.7, x=bp, y=-1, ETo_values()$dias, xpd=TRUE, srt=270)
     }
   })
   
@@ -296,8 +296,9 @@ shinyServer(function(input, output, session) {
       df1 <- data.frame(fechas=as.character(seq.Date(input$start3, input$stop3, by=1)))
       df2 <- data.frame(fechas=lamina_aplicada()$fechas, riegos=lamina_aplicada()$riegos)
       result <- base::merge(df1,df2, all.x=T)
-      bp <- barplot(result$riegos, names.arg=result$fechas, col="light blue")
+      bp <- barplot(result$riegos,  col="light blue")
       text(bp, result$riegos-0.5, labels=as.character( round(result$riegos, 2)), xpd=TRUE)
+      text(cex=0.7, x=bp, y=-1, result$fechas, xpd=TRUE, srt=270)
     }
   })
   
