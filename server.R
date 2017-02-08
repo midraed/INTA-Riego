@@ -211,8 +211,9 @@ shinyServer(function(input, output, session) {
     })
   
   output$EToplot <- renderPlot({
-    bp <- barplot(ETo_values()$ETo, names.arg=ETo_values()$dias, ylab="ETo (mm)", col="blue")
+    bp <- barplot(ETo_values()$ETo, ylab="ETo (mm)", col="blue")
     text(bp, ETo_values()$ETo-0.3, labels=as.character(ETo_values()$ETo), xpd=TRUE)
+    text(cex=1, x=bp-.65, y=-1.5, ETo_values()$dias, xpd=TRUE, srt=45)
   })
   
   output$ETcplot <- renderPlot({
@@ -231,9 +232,10 @@ shinyServer(function(input, output, session) {
       Kc_value[Kc_slider==10] <- input$Kc_mes10
       Kc_value[Kc_slider==11] <- input$Kc_mes11
       Kc_value[Kc_slider==12] <- input$Kc_mes12
-      bp <- barplot(ETo_values()$ETo * Kc_value, names.arg=ETo_values()$dias, 
+      bp <- barplot(ETo_values()$ETo * Kc_value, 
                     ylab="ETc (mm)", col="dark green", ylim=c(0, max(ETo_values()$ETo)))
       text(bp, ETo_values()$ETo * Kc_value -0.3, labels=as.character(round(ETo_values()$ETo  * Kc_value,2)), xpd=TRUE)
+      text(cex=1, x=bp-.65, y=-1.5, ETo_values()$dias, xpd=TRUE, srt=45)
     }
   })
   
