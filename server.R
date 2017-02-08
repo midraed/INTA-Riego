@@ -15,7 +15,15 @@ shinyServer(function(input, output, session) {
                        host='172.21.116.72')
     on.exit(dbDisconnect(connWS), add = TRUE)
     datos <- dbGetQuery(connWS, paste0("SELECT * FROM Current WHERE FechaHora BETWEEN '", input$start1, "' AND '", paste(input$stop1, "23:59:59"), "'" ))
-    # datos$FechaHora <- as.POSIXct(strptime(datos$FechaHora, format= "%Y-%m-%d %H:%M:%S", tz="ART"))
+    ## FIX para pp acumulada
+    Fecha <- as.Date(strptime(datos$FechaHora, format= "%Y-%m-%d %H:%M:%S", tz="ART"))
+    Lluvia2 <- datos$Lluvia
+    for(i in 2:length(Fecha)){
+      if(Fecha[i] == Fecha[i-1]){
+        Lluvia2[i] <- datos$Lluvia[i] - datos$Lluvia[i-1]
+      }
+    }
+    datos$Lluvia <- Lluvia2
     #dbDisconnect(datosWS)
     if(length(datos)>1){
       datos <- read.WSdata(WSdata = datos, 
@@ -288,7 +296,7 @@ shinyServer(function(input, output, session) {
   
   
   output$Lam_acum <- renderText({paste("Lámina de riego acumulada", round(sum(lamina_aplicada()$riegos),0), "mm.")})
-  output$ppT_acum <- renderText({paste("Precipitación acumulada", sum(datos.WS()$hourly$rain), "mm.")})
+  output$ppT_acum <- renderText({paste("Precipitación acumulada", sum(datos.WS()$daily$rain_sum), "mm.")})
   output$ppE_acum <- renderText({paste("Precipitación efectiva acumulada", round(sum(datos.WS()$hourly$rain)*0.6,0), "mm.")})
   
   output$riegoPlot <- renderPlot({
