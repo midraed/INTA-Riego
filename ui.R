@@ -119,7 +119,7 @@ navbarPage("Riego EEA Mendoza!",
                         textOutput("ppE_acum"),
                         plotOutput("riegoPlot")
                         # #tableOutput("table")
-                       
+                       ## Agregar bp de rain
                       )
                     )  
            ),

@@ -307,6 +307,7 @@ shinyServer(function(input, output, session) {
       bp <- barplot(result$riegos,  col="light blue")
       text(bp, result$riegos-0.5, labels=as.character( round(result$riegos, 2)), xpd=TRUE)
       text(cex=0.7, x=bp, y=-1, result$fechas, xpd=TRUE, srt=270)
+      ## Agregar bp de rain
     }
   })
   
