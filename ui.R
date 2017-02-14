@@ -109,6 +109,7 @@ navbarPage("Riego EEA Mendoza!",
                                   language = "es", width = NULL),
                         selectInput("Parcela2", "Parcela:", c("", listaParcelas), selected = NULL, multiple = FALSE,
                                     selectize = TRUE, width = NULL, size = NULL),
+                        sliderInput("EFr", "Eficiencia:", value = 0.90,  min = 0, max = 1, step = 0.01),
                         downloadButton("downloadRiego", "Descargar")
                       ),
                       

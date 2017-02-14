@@ -295,7 +295,7 @@ shinyServer(function(input, output, session) {
   })
   
   
-  output$Lam_acum <- renderText({paste("Lámina de riego acumulada", round(sum(lamina_aplicada()$riegos),0), "mm.")})
+  output$Lam_acum <- renderText({paste("Lámina de riego acumulada", round(sum(lamina_aplicada()$riegos)*input$EFr,2), "mm.")})
   output$ppT_acum <- renderText({paste("Precipitación acumulada", sum(datos.WS()$daily$rain_sum), "mm.")})
   output$ppE_acum <- renderText({paste("Precipitación efectiva acumulada", round(sum(datos.WS()$daily$rain_sum)*0.6,0), "mm.")})
   
@@ -304,8 +304,8 @@ shinyServer(function(input, output, session) {
       df1 <- data.frame(fechas=as.character(seq.Date(input$start3, input$stop3, by=1)))
       df2 <- data.frame(fechas=lamina_aplicada()$fechas, riegos=lamina_aplicada()$riegos)
       result <- base::merge(df1,df2, all.x=T)
-      bp <- barplot(result$riegos,  col="light blue")
-      text(bp, result$riegos-0.5, labels=as.character( round(result$riegos, 2)), xpd=TRUE)
+      bp <- barplot(result$riegos*input$EFr,  col="light blue", ylim=c(0, max(result$riegos, na.rm=T)))
+      text(bp, result$riegos*input$EFr-0.5, labels=as.character(round(result$riegos*input$EFr, 2)), xpd=TRUE)
       text(cex=0.7, x=bp, y=-1, result$fechas, xpd=TRUE, srt=270)
       ## Agregar bp de rain
     }
@@ -318,7 +318,7 @@ shinyServer(function(input, output, session) {
     },
     content = function(file) {
       df1 <- data.frame(fechas=as.character(seq.Date(input$start3, input$stop3, by=1)))
-      df2 <- data.frame(fechas=lamina_aplicada()$fechas, Lamina_ap=lamina_aplicada()$riegos)
+      df2 <- data.frame(fechas=lamina_aplicada()$fechas, Lamina_ap=lamina_aplicada()$riegos*input$EFr)
       result <- base::merge(df1,df2, all.x=T)
       write.csv(result, file)
     }
