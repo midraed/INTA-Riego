@@ -13,7 +13,6 @@ shinyServer(function(input, output, session) {
   datos.WS <- reactive({
     connWS = dbConnect(MySQL(), user='shiny', password='561234', dbname='METEO1',
                        host='172.21.116.72')
-    on.exit(dbDisconnect(connWS), add = TRUE)
     datos <- dbGetQuery(connWS, paste0("SELECT * FROM Current WHERE FechaHora BETWEEN '", input$start1, "' AND '", paste(input$stop1, "23:59:59"), "'" ))
     ## FIX para pp acumulada
     Fecha <- as.Date(strptime(datos$FechaHora, format= "%Y-%m-%d %H:%M:%S", tz="ART"))
@@ -30,7 +29,9 @@ shinyServer(function(input, output, session) {
                            datetime.format =  "%Y-%m-%d %H:%M:%S", columns = c("datetime", "temp", 
                            "RH", NA, "rain", "radiation", "wind"), lat=-33.00513, 
                            long= -68.86469, elev=927, height= 2)
-      } else {datos <-  NA}
+    } else {datos <-  NA}
+    dbDisconnect(connWS)
+    return(datos)
   })
   
   ### Parcelas y riego
@@ -38,29 +39,33 @@ shinyServer(function(input, output, session) {
   datos.goteo <- reactive({
     connRiego = dbConnect(MySQL(), user='shiny', password='561234', dbname='RIEGO',
                           host='172.21.116.72')
-    on.exit(dbDisconnect(connRiego), add = TRUE)
     datos <- dbGetQuery(connRiego, "SELECT * FROM GOTEO")
+    dbDisconnect(connRiego)
+    return(datos)
   })
   
   datos.superf <- reactive({
     connRiego = dbConnect(MySQL(), user='shiny', password='561234', dbname='RIEGO',
                           host='172.21.116.72')
-    on.exit(dbDisconnect(connRiego), add = TRUE)
     datos <- dbGetQuery(connRiego, "SELECT * FROM SUPERFICIAL")
+    dbDisconnect(connRiego)
+    return(datos)
   })
   
   datos.Kc <- reactive({
     connRiego = dbConnect(MySQL(), user='shiny', password='561234', dbname='RIEGO',
                           host='172.21.116.72')
-    on.exit(dbDisconnect(connRiego), add = TRUE)
     datos <- dbGetQuery(connRiego, "SELECT * FROM KC")
+    dbDisconnect(connRiego)
+    return(datos)
   })
   
   datos.riego <- reactive({
     connRiego = dbConnect(MySQL(), user='shiny', password='561234', dbname='RIEGO',
                           host='172.21.116.72')
-    on.exit(dbDisconnect(connRiego), add = TRUE)
     datos <- dbGetQuery(connRiego, "SELECT * FROM RIEGOS")
+    dbDisconnect(connRiego)
+    return(datos)
   })
   
   ################### RESULTS ###################################
