@@ -73,7 +73,7 @@ Sumatoria de la precipitación recibida cada hora durante un día completo (mm).
 
 ### Precipitación efectiva
 
-Calculada como la precipitación diaria acumulada (mm) menos el 40%.
+Calculada como el 80% precipitación diaria acumulada (mm) menos 12mm (Anderson).
 
 
 ### Software 
