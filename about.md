@@ -3,12 +3,6 @@ title: "Acerca de"
 output: html_document
 ---
 
-### Autores
-Guillermo Federico Olmedo, Florencia Ferrari
-
-##### Con el apoyo de 
-Rosana Vallone, Marcos Montoya, Alejandro Ambrogetti, Sergio Salas, Oscar Guarise
-
 
 ### Evapotranspiración de referencia
 
