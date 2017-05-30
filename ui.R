@@ -3,7 +3,7 @@ library(water)
 library(RMySQL)
 
 connRiego = dbConnect(MySQL(), user='shiny', password='561234', dbname='RIEGO',
-                        host='172.21.116.72')
+                        host='172.21.118.10')
 datos.goteo <- dbGetQuery(connRiego, "SELECT * FROM GOTEO")
 datos.superficial <- dbGetQuery(connRiego, "SELECT * FROM SUPERFICIAL")
 datos.kc <- dbGetQuery(connRiego, "SELECT * FROM KC")

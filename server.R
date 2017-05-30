@@ -1,5 +1,6 @@
 library(shiny)
 library(DBI)
+library(RMySQL)
 library(water)
 
 
@@ -12,7 +13,7 @@ shinyServer(function(input, output, session) {
   
   datos.WS <- reactive({
     connWS = dbConnect(MySQL(), user='shiny', password='561234', dbname='METEO1',
-                       host='172.21.116.72')
+                       host='172.21.118.10')
     on.exit(dbDisconnect(connWS), add = TRUE)
     datos <- dbGetQuery(connWS, paste0("SELECT * FROM Current WHERE FechaHora BETWEEN '", input$start1, "' AND '", paste(input$stop1, "23:59:59"), "'" ))
     ## FIX para pp acumulada
