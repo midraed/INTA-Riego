@@ -3,7 +3,7 @@ library(water)
 library(RMySQL)
 
 connRiego = dbConnect(MySQL(), user='shiny', password='561234', dbname='RIEGO',
-                        host='172.21.116.72')
+                        host='172.21.118.10')
 datos.goteo <- dbGetQuery(connRiego, "SELECT * FROM GOTEO")
 datos.superficial <- dbGetQuery(connRiego, "SELECT * FROM SUPERFICIAL")
 datos.kc <- dbGetQuery(connRiego, "SELECT * FROM KC")
@@ -46,7 +46,7 @@ navbarPage("Riego EEA Mendoza!",
                                   language = "es", width = NULL),
                         selectInput("Parcela1", "Parcela:", c("", listaParcelas), selected = NULL, multiple = FALSE,
                                     selectize = TRUE, width = NULL, size = NULL),
-                        selectInput("Kc", "Kc:", listaKc, selected = NULL, multiple = FALSE,
+                        selectInput("Kc", "Kc:", c("", listaKc), selected = NULL, multiple = FALSE,
                                     selectize = TRUE, width = NULL, size = NULL),
                         conditionalPanel(condition= "output.n_meses > 0",
                                          sliderInput("Kc_mes1", "Kc medio:", value = 0,  min = 0, max = 1.3, step = 0.01)
@@ -83,7 +83,8 @@ navbarPage("Riego EEA Mendoza!",
                         ),
                         conditionalPanel(condition= "output.n_meses > 11",
                                          sliderInput("Kc_mes12", "Kc medio:", value = 0,  min = 0, max = 1.3, step = 0.01)
-                        )
+                        ),
+                        downloadButton("downloadET", "Descargar")
                         
                       ),
                       
@@ -106,7 +107,9 @@ navbarPage("Riego EEA Mendoza!",
                                   format = "yyyy-mm-dd", startview = "month", weekstart = 0,
                                   language = "es", width = NULL),
                         selectInput("Parcela2", "Parcela:", c("", listaParcelas), selected = NULL, multiple = FALSE,
-                                    selectize = TRUE, width = NULL, size = NULL)
+                                    selectize = TRUE, width = NULL, size = NULL),
+                        sliderInput("EFr", "Eficiencia:", value = 0.90,  min = 0, max = 1, step = 0.01),
+                        downloadButton("downloadRiego", "Descargar")
                       ),
                       
                       # Show a plot of the generated distribution
@@ -116,8 +119,13 @@ navbarPage("Riego EEA Mendoza!",
                         textOutput("ppE_acum"),
                         plotOutput("riegoPlot")
                         # #tableOutput("table")
-                       
+                       ## Agregar bp de rain
                       )
+                    )  
+           ),
+           tabPanel("Acerca de",
+                    fluidPage(
+                      includeMarkdown("about.md")
                     )  
            )
            
