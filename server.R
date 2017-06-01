@@ -201,7 +201,7 @@ shinyServer(function(input, output, session) {
   output$n_meses <- renderText({length(unique(Kc_values()$meses))})
   outputOptions(output, 'n_meses', suspendWhenHidden=FALSE)
 
-#  output$n_meses <- renderText({length(unique(Kc_values()$mes))})
+  output$n_meses <- renderText({length(unique(Kc_values()$mes))})
 
   
   output$ETo_acum <- renderText({paste("ETo acumulada", sum(ETo_values()$ETo), "mm.")})
