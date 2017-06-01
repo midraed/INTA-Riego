@@ -30,7 +30,7 @@ shinyServer(function(input, output, session) {
                            "RH", NA, "rain", "radiation", "wind"), lat=-33.00513, 
                            long= -68.86469, elev=927, height= 2)
     } else {datos <-  NA}
-    dbDisconnect(connWS)
+    #dbDisconnect(connWS)
     return(datos)
   })
   
@@ -38,7 +38,7 @@ shinyServer(function(input, output, session) {
   
   datos.goteo <- reactive({
     connRiego = dbConnect(MySQL(), user='shiny', password='561234', dbname='RIEGO',
-                          host='172.21.116.72')
+                          host='172.21.118.10')
     datos <- dbGetQuery(connRiego, "SELECT * FROM GOTEO")
     dbDisconnect(connRiego)
     return(datos)
@@ -46,7 +46,7 @@ shinyServer(function(input, output, session) {
   
   datos.superf <- reactive({
     connRiego = dbConnect(MySQL(), user='shiny', password='561234', dbname='RIEGO',
-                          host='172.21.116.72')
+                          host='172.21.118.10')
     datos <- dbGetQuery(connRiego, "SELECT * FROM SUPERFICIAL")
     dbDisconnect(connRiego)
     return(datos)
@@ -54,7 +54,7 @@ shinyServer(function(input, output, session) {
   
   datos.Kc <- reactive({
     connRiego = dbConnect(MySQL(), user='shiny', password='561234', dbname='RIEGO',
-                          host='172.21.116.72')
+                          host='172.21.118.10')
     datos <- dbGetQuery(connRiego, "SELECT * FROM KC")
     dbDisconnect(connRiego)
     return(datos)
@@ -62,7 +62,7 @@ shinyServer(function(input, output, session) {
   
   datos.riego <- reactive({
     connRiego = dbConnect(MySQL(), user='shiny', password='561234', dbname='RIEGO',
-                          host='172.21.116.72')
+                          host='172.21.118.10')
     datos <- dbGetQuery(connRiego, "SELECT * FROM RIEGOS")
     dbDisconnect(connRiego)
     return(datos)
@@ -198,12 +198,11 @@ shinyServer(function(input, output, session) {
     }
   })
   
-<<<<<<< HEAD
   output$n_meses <- renderText({length(unique(Kc_values()$meses))})
   outputOptions(output, 'n_meses', suspendWhenHidden=FALSE)
-=======
-  output$n_meses <- renderText({length(unique(Kc_values()$mes))})
->>>>>>> 689cd0b04928db81411240b3dd8e391a559fae56
+
+#  output$n_meses <- renderText({length(unique(Kc_values()$mes))})
+
   
   output$ETo_acum <- renderText({paste("ETo acumulada", sum(ETo_values()$ETo), "mm.")})
   
@@ -289,7 +288,7 @@ shinyServer(function(input, output, session) {
   
   lamina_aplicada <- reactive({
     connRiego = dbConnect(MySQL(), user='shiny', password='561234', dbname='RIEGO',
-                          host='172.21.116.72')
+                          host='172.21.118.10')
     on.exit(dbDisconnect(connRiego), add = TRUE)
     ## TODO: Esto ando solo para goteos..!
     parcelaSelected <- strsplit(input$Parcela2, split=" ")[[1]][1]  #Extraigo el N_PARCELA
