@@ -2,8 +2,8 @@ library(shiny)
 library(water)
 library(RMySQL)
 
-connRiego = dbConnect(MySQL(), user='shiny', password='561234', dbname='RIEGO',
-                        host='172.21.118.10')
+connRiego = dbConnect(MySQL(), user=config$db$user, password=config$db$pass,
+                      dbname=config$db$Irrdigationbname, host=config$db$host)
 datos.goteo <- dbGetQuery(connRiego, "SELECT * FROM GOTEO")
 datos.superficial <- dbGetQuery(connRiego, "SELECT * FROM SUPERFICIAL")
 datos.kc <- dbGetQuery(connRiego, "SELECT * FROM KC")
@@ -14,7 +14,7 @@ listaParcelas <- list('Goteo' = paste(datos.goteo$N_PARCELA, datos.goteo$PARCELA
 listaKc <- datos.kc$Nombre
 
 
-navbarPage("Riego EEA Mendoza!",
+navbarPage(config$general$appname,
            tabPanel("Agrometeorología",
                     sidebarLayout(
                       sidebarPanel(

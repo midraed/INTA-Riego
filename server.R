@@ -2,8 +2,10 @@ library(shiny)
 library(DBI)
 library(RMySQL)
 library(water)
+library(yaml)
 
-
+config = yaml.load_file("config.yml")
+if(config$general$language != "SPA"){warning("Language not supported yet")}
 
 shinyServer(function(input, output, session) {
   
@@ -12,8 +14,8 @@ shinyServer(function(input, output, session) {
   #### Datos METEO
   
   datos.WS <- reactive({
-    connWS = dbConnect(MySQL(), user='shiny', password='561234', dbname='METEO1',
-                       host='172.21.118.10')
+    connWS = dbConnect(MySQL(), user=config$db$user, password=config$db$pass,
+                       dbname=config$db$WSdbname, host=config$db$host)
     on.exit(dbDisconnect(connWS), add = TRUE)
 
     datos <- dbGetQuery(connWS, paste0("SELECT * FROM Current WHERE FechaHora BETWEEN '", input$start1, "' AND '", paste(input$stop1, "23:59:59"), "'" ))
@@ -37,32 +39,32 @@ shinyServer(function(input, output, session) {
   ### Parcelas y riego
   
   datos.goteo <- reactive({
-    connRiego = dbConnect(MySQL(), user='shiny', password='561234', dbname='RIEGO',
-                          host='172.21.118.10')
+    connRiego = dbConnect(MySQL(), user=config$db$user, password=config$db$pass,
+                          dbname=config$db$Irrdigationbname, host=config$db$host)
     datos <- dbGetQuery(connRiego, "SELECT * FROM GOTEO")
     dbDisconnect(connRiego)
     return(datos)
   })
   
   datos.superf <- reactive({
-    connRiego = dbConnect(MySQL(), user='shiny', password='561234', dbname='RIEGO',
-                          host='172.21.118.10')
+    connRiego = dbConnect(MySQL(), user=config$db$user, password=config$db$pass,
+                          dbname=config$db$Irrdigationbname, host=config$db$host)
     datos <- dbGetQuery(connRiego, "SELECT * FROM SUPERFICIAL")
     dbDisconnect(connRiego)
     return(datos)
   })
   
   datos.Kc <- reactive({
-    connRiego = dbConnect(MySQL(), user='shiny', password='561234', dbname='RIEGO',
-                          host='172.21.118.10')
+    connRiego = dbConnect(MySQL(), user=config$db$user, password=config$db$pass,
+                          dbname=config$db$Irrdigationbname, host=config$db$host)
     datos <- dbGetQuery(connRiego, "SELECT * FROM KC")
     dbDisconnect(connRiego)
     return(datos)
   })
   
   datos.riego <- reactive({
-    connRiego = dbConnect(MySQL(), user='shiny', password='561234', dbname='RIEGO',
-                          host='172.21.118.10')
+    connRiego = dbConnect(MySQL(), user=config$db$user, password=config$db$pass,
+                          dbname=config$db$Irrdigationbname, host=config$db$host)
     datos <- dbGetQuery(connRiego, "SELECT * FROM RIEGOS")
     dbDisconnect(connRiego)
     return(datos)
@@ -287,8 +289,8 @@ shinyServer(function(input, output, session) {
   ######### Riego ####
   
   lamina_aplicada <- reactive({
-    connRiego = dbConnect(MySQL(), user='shiny', password='561234', dbname='RIEGO',
-                          host='172.21.118.10')
+    connRiego = dbConnect(MySQL(), user=config$db$user, password=config$db$pass,
+                          dbname=config$db$Irrdigationbname, host=config$db$host)
     on.exit(dbDisconnect(connRiego), add = TRUE)
     ## TODO: Esto ando solo para goteos..!
     parcelaSelected <- strsplit(input$Parcela2, split=" ")[[1]][1]  #Extraigo el N_PARCELA

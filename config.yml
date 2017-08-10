@@ -1,0 +1,9 @@
+general :
+ appname : EEA Mendoza Riego
+ language : SPA
+db :
+ host : example.com
+ user : user453
+ pass : zoom
+ WSdbname : METEO1
+ Irrigationdbname : RIEGO
