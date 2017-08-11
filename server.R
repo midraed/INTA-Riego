@@ -40,7 +40,7 @@ shinyServer(function(input, output, session) {
   
   datos.goteo <- reactive({
     connRiego = dbConnect(MySQL(), user=config$db$user, password=config$db$pass,
-                          dbname=config$db$Irrdigationbname, host=config$db$host)
+                          dbname=config$db$Irrigationdbname, host=config$db$host)
     datos <- dbGetQuery(connRiego, "SELECT * FROM GOTEO")
     dbDisconnect(connRiego)
     return(datos)
@@ -48,7 +48,7 @@ shinyServer(function(input, output, session) {
   
   datos.superf <- reactive({
     connRiego = dbConnect(MySQL(), user=config$db$user, password=config$db$pass,
-                          dbname=config$db$Irrdigationbname, host=config$db$host)
+                          dbname=config$db$Irrigationdbname, host=config$db$host)
     datos <- dbGetQuery(connRiego, "SELECT * FROM SUPERFICIAL")
     dbDisconnect(connRiego)
     return(datos)
@@ -56,7 +56,7 @@ shinyServer(function(input, output, session) {
   
   datos.Kc <- reactive({
     connRiego = dbConnect(MySQL(), user=config$db$user, password=config$db$pass,
-                          dbname=config$db$Irrdigationbname, host=config$db$host)
+                          dbname=config$db$Irrigationdbname, host=config$db$host)
     datos <- dbGetQuery(connRiego, "SELECT * FROM KC")
     dbDisconnect(connRiego)
     return(datos)
@@ -64,7 +64,7 @@ shinyServer(function(input, output, session) {
   
   datos.riego <- reactive({
     connRiego = dbConnect(MySQL(), user=config$db$user, password=config$db$pass,
-                          dbname=config$db$Irrdigationbname, host=config$db$host)
+                          dbname=config$db$Irrigationdbname, host=config$db$host)
     datos <- dbGetQuery(connRiego, "SELECT * FROM RIEGOS")
     dbDisconnect(connRiego)
     return(datos)
@@ -290,7 +290,7 @@ shinyServer(function(input, output, session) {
   
   lamina_aplicada <- reactive({
     connRiego = dbConnect(MySQL(), user=config$db$user, password=config$db$pass,
-                          dbname=config$db$Irrdigationbname, host=config$db$host)
+                          dbname=config$db$Irrigationdbname, host=config$db$host)
     on.exit(dbDisconnect(connRiego), add = TRUE)
     ## TODO: Esto ando solo para goteos..!
     parcelaSelected <- strsplit(input$Parcela2, split=" ")[[1]][1]  #Extraigo el N_PARCELA
